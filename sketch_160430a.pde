@@ -319,7 +319,7 @@ void readData() {
 
   }
   //加速度
-  accel[99]=(ax*ax+ay*ay+az*az)/1000;
+  accel[99]=pow((ax*ax+ay*ay+az*az),1.5)/1000000;
   
   //外部ファイルへの出力内容(csv形式)
   outwrite.print(fr);
@@ -334,14 +334,14 @@ void readData() {
 
 
   //1拍の判断
-  if(accel[98]-accel[95]>500&&accel[98]-accel[90]>2000&&accel[99]-accel[98]<0&&accel[99]>5000&&fr-p2fr>25){
+  if(accel[99]-accel[80]>5000&&accel[99]>35000&&fr-p2fr>25){
     i=i+1;
     outwrite.print(",*");
     
     //intervalのスムージング
     interval[0]=interval[1];
     interval[1]=interval[2];
-    interval[2]=sqrt(((fr-p2fr)+(interval[0]+interval[1])))+10;//急激な変化は不自然なので過去3つの平方根に10を足す
+    interval[2]=sqrt(((fr-p2fr)+(interval[0]+interval[1])))+11;//急激な変化は不自然なので過去3つの平方根に10を足す
     
     //intervalが大きすぎると35にする
     if(interval[2]>35){
