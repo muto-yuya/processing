@@ -155,7 +155,7 @@ void setup () {
   imageMode(CENTER);
   
   //加速度センサの設定
-  myPort = new Serial(this, "COM3", 115200);
+  //myPort = new Serial(this, "COM3", 115200);
   
   //外部出力ファイルの名前
   outwrite = createWriter("writer.txt");
@@ -175,7 +175,7 @@ void draw () {
   text(i,300,300);
   text(interval[2],300,320);
   text(vel[2],300,340);
-  readData();
+  //readData();
   ensou();
   fire();  
   
@@ -276,7 +276,7 @@ void keyPressed(){
 void readData() {
   //arduinoからの加速度読み込み
   String s="";
-  while (myPort.available()>0) {
+  if (myPort.available()>0) {
     s = myPort.readStringUntil('\n');
     _a = split(s, ' ');
     try {
