@@ -10,7 +10,7 @@ OscP5 oscP5;
 int posx, posy;
   
 void setup () {
-  size(1500,750,P3D);
+  fullScreen(P3D);
   frameRate(100); 
   hint(DISABLE_DEPTH_TEST);
   blendMode(ADD);
@@ -21,7 +21,7 @@ void setup () {
 }
  
 void draw () {
-  background(0,0,15);
+  background(0,0,30);
   for(int i=0;i<fireworks.size();i++){
      fire_works art=fireworks.get(i);
      if(art.m==0){
@@ -40,7 +40,9 @@ void draw () {
    }
   
   if(k<i){
-    fireworks.add(new fire_works(80));
+    if(k%2==0){
+      fireworks.add(new fire_works(100));
+    }
     k=k+1;
   }
 }
@@ -51,11 +53,16 @@ void keyPressed(){
   if(key=='a'){
   i=i+1;
   }
+  if(key=='r'){
+    i=0;
+    k=0;
+  }
 }
 
 
 PImage createLight(float rPower,float gPower,float bPower){
   int side=32;
+  
   float center=side/2.0;
   
   PImage img=createImage(side,side,RGB);
@@ -72,10 +79,10 @@ PImage createLight(float rPower,float gPower,float bPower){
   return img;
 }
 class fire_works{
-  int num=256;
+  int num=200;
   
   PVector centerPosition=new PVector(random(width/8,width*7/8),random(height/2,height*4/5),random(-100,100));
-  PVector velocity=new PVector(0,-18,0);
+  PVector velocity=new PVector(0,-20,0);
   PVector accel=new PVector(0,0.6,0);
   float colorchange=random(0,5);
   PImage img;
@@ -85,7 +92,7 @@ class fire_works{
   float radius;
   float pos_radius;
   
-  PVector[] posFirePosition=new PVector[num];
+//  PVector[] posFirePosition=new PVector[num];
   PVector[] firePosition=new PVector[num];
   
   float cosTheta;
@@ -106,7 +113,7 @@ class fire_works{
       sinTheta = sqrt(1- cosTheta*cosTheta);
       phi = random(0,1) * 2 * PI;
       firePosition[s1]=new PVector(radius * sinTheta * cos(phi),radius * sinTheta * sin(phi),radius * cosTheta);
-      posFirePosition[s1]=firePosition[s1]; 
+  //    posFirePosition[s1]=firePosition[s1]; 
       firePosition[s1]=PVector.mult(firePosition[s1],1.12);
       s1++;
       }
@@ -126,6 +133,7 @@ class fire_works{
     while(s2<num){
       pushMatrix();
       translate(centerPosition.x,centerPosition.y,centerPosition.z);
+      /*
       strokeWeight(1);
       beginShape(LINES);
       stroke(0);
@@ -133,12 +141,13 @@ class fire_works{
       stroke(200, 100);
       vertex(firePosition[s2].x,firePosition[s2].y,firePosition[s2].z);
       endShape();
+      */
       translate(firePosition[s2].x,firePosition[s2].y,firePosition[s2].z);
       image(img,0,0);
       popMatrix();
-      posFirePosition[s2]=firePosition[s2]; 
+      //posFirePosition[s2]=firePosition[s2]; 
       
-      firePosition[s2]=PVector.mult(firePosition[s2],1.015);
+      firePosition[s2]=PVector.mult(firePosition[s2],1.02);
       s2++;
     }
   }

@@ -210,27 +210,27 @@ void ensou(){
         }else{
           //0以外の場合は前回の音を消し、今回の音を鳴らす
           if(ch0[count]!=0){
-            output.sendNoteOff(0,ch0[count-1],vel[2]);
+            
             output.sendNoteOn(0,ch0[count],vel[2]);
         }
         if(ch1[count]!=0){
-            output.sendNoteOff(1,ch1[count-1],vel[2]);
+            
             output.sendNoteOn(1,ch1[count],vel[2]);
         }
         if(ch2[count]!=0){
-            output.sendNoteOff(2,ch2[count-1],vel[2]);
+            
             output.sendNoteOn(2,ch2[count],vel[2]);
         }
         if(ch3[count]!=0){
-            output.sendNoteOff(3,ch3[count-1],vel[2]);
+            
             output.sendNoteOn(3,ch3[count],vel[2]);
         }
         if(ch4[count]!=0){
-            output.sendNoteOff(4,ch4[count-1],vel[2]);
+            
             output.sendNoteOn(4,ch4[count],vel[2]);
         }
         if(ch5[count]!=0){
-            output.sendNoteOff(5,ch5[count-1],vel[2]);
+           
             output.sendNoteOn(5,ch5[count],vel[2]);
         }
       }
@@ -238,9 +238,7 @@ void ensou(){
     }
     pfr=fr;//最後に音符が鳴った時間を更新
   }
-  OscMessage myMessage = new OscMessage("/test");
-  myMessage.add(i);//add message
-  oscP5.send(myMessage, myRemoteLocation); 
+  
 }
 
 //キーボードから鳴らす場合
@@ -274,15 +272,13 @@ void keyPressed(){
     vel[0]=100;        //Velocity（音の強さ）の設定0〜127　音の強さ
     vel[1]=100;
     vel[2]=100;
-    oscP5 = new OscP5(this,12000);//自分のポート番号
-    myRemoteLocation = new NetAddress("127.0.0.1", 10000);//IPaddress,相手のポート番号
   }
 }
 
 void readData() {
   //arduinoからの加速度読み込み
   String s="";
-  while (myPort.available()>0) {
+  if(myPort.available()>0) {
     s = myPort.readStringUntil('\n');
     _a = split(s, ' ');
     try {
@@ -335,9 +331,12 @@ void readData() {
   accel[99]=pow((ax*ax+ay*ay+az*az),1.5)/1000000;
   
   //1拍の判断
-  if(accel[99]-accel[90]>5000&&accel[99]>20000&&fr-p2fr>25){
+  if(accel[99]-accel[90]>5000&&accel[99]>25000&&fr-p2fr>20){
     i=i+1;
     outwrite.print(",*");
+    OscMessage myMessage = new OscMessage("/test");
+    myMessage.add(i);//add message
+    oscP5.send(myMessage, myRemoteLocation); 
     
     //intervalのスムージング
     interval[0]=interval[1];
