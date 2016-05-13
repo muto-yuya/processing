@@ -10,8 +10,10 @@ MidiOutput output;
 import oscP5.*;
 import netP5.*;
 OscP5 oscP5;
-NetAddress myRemoteLocation;
-OscMessage myMessage = new OscMessage("/test");
+NetAddress myRemoteLocation1;
+OscMessage myMessage1 = new OscMessage("/test1");
+NetAddress myRemoteLocation2;
+OscMessage myMessage2 = new OscMessage("/test2");
 
 //加速度センサからの数値
 String[] _a = new String[100];
@@ -176,8 +178,8 @@ void setup () {
   }
   
   oscP5 = new OscP5(this,12000);//自分のポート番号
-  myRemoteLocation = new NetAddress("127.0.0.1", 10000);//IPaddress,相手のポート番号
-  
+  myRemoteLocation1 = new NetAddress("10.208.182.35", 10000);//IPaddress,相手のポート番号
+  myRemoteLocation2 = new NetAddress("10.208.182.35", 10001);//IPaddress,相手のポート番号
   
 }
  
@@ -245,9 +247,9 @@ void ensou(){
 void keyPressed(){
   if(key=='a'){
   i=i+1;
-  OscMessage myMessage = new OscMessage("/test");
-  myMessage.add(i);//add message
-  oscP5.send(myMessage, myRemoteLocation); 
+  OscMessage myMessage1 = new OscMessage("/test1");
+  myMessage1.add(i);//add message
+  oscP5.send(myMessage1, myRemoteLocation1); 
   
   interval[0]=interval[1];
   interval[1]=interval[2];
@@ -334,9 +336,12 @@ void readData() {
   if(accel[99]-accel[90]>5000&&accel[99]>25000&&fr-p2fr>20){
     i=i+1;
     outwrite.print(",*");
-    OscMessage myMessage = new OscMessage("/test");
-    myMessage.add(i);//add message
-    oscP5.send(myMessage, myRemoteLocation); 
+    
+    OscMessage myMessage1 = new OscMessage("/test1");
+    myMessage1.add(i);//add message
+    oscP5.send(myMessage1, myRemoteLocation1);
+    
+    
     
     //intervalのスムージング
     interval[0]=interval[1];
@@ -349,6 +354,10 @@ void readData() {
       interval[2]=35;
     }
     
+    OscMessage myMessage2 = new OscMessage("/test2");
+    myMessage2.add((int)interval[2]);//add message
+    oscP5.send(myMessage2, myRemoteLocation2);
+    text((int)interval[2],200,250);
     //音量のスムージング
     vel[0]=vel[1];
     vel[1]=vel[2];
